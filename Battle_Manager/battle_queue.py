@@ -124,7 +124,7 @@ class BattleQueue:
                     'Available choices: 1 | 2 | 3\n'
                 )    
 
-                # Handle choices
+                # Base Attack 
                 if move == '1':
                     available: list[str] = []       
                     print('\nAvailable opponents:')
@@ -146,14 +146,16 @@ class BattleQueue:
                                 f'Player {target}\'s ({target_player}) health now is at {target_player.health}!\n'
                                 )
                             break
-
+                
+                # Defend
                 elif move == '2':
                     player.defend()
                     print(f'{player} defended and gained +10 Defense!\n')
 
+                # Special Attack
                 elif move == '3':
                     print(f'{player} used {special_name}!')
-                    
+                
                 else:
                     print('Invalid choice. Please enter 1, 2, or 3.')
         
