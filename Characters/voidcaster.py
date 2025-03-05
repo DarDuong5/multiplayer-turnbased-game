@@ -1,12 +1,11 @@
-from typing import TYPE_CHECKING
 from Characters.character import Character
-
-if TYPE_CHECKING:
-    from Characters.character import Character
 
 class Voidcaster(Character):
     def __init__(self):
-        super().__init__(health=125, defense=0, base_attack=50, special_attack=60)
+        super().__init__(health=125, defense=0, base_attack=50, special_attack=60, base_attack_name='Dark Pulse', special_attack_name='Arcane Blast')
+
+    def __str__(self) -> str:
+        return f'Voidcaster'
     
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction

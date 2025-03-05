@@ -1,12 +1,11 @@
-from typing import TYPE_CHECKING
 from Characters.character import Character
-
-if TYPE_CHECKING:
-    from Characters.character import Character
 
 class Gladiator(Character):
     def __init__(self):
-        super().__init__(health=250, defense=10, base_attack=30, special_attack=50)
+        super().__init__(health=250, defense=10, base_attack=30, special_attack=50, base_attack_name='Sword Slash', special_attack_name='Titan Smash')
+
+    def __str__(self) -> str:
+        return f'Gladiator'
     
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction

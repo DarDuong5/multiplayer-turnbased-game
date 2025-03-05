@@ -2,7 +2,10 @@ from Characters.character import Character
 
 class Stormstriker(Character):
     def __init__(self):
-        super().__init__(health=150, defense=0, base_attack=40, special_attack=60)
+        super().__init__(health=150, defense=0, base_attack=40, special_attack=60, base_attack_name='Electric Arrow', special_attack_name='Piercing Arrow')
+
+    def __str__(self) -> str:
+        return f'Stormstriker'
 
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction

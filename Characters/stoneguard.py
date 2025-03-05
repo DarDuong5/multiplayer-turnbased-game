@@ -2,7 +2,10 @@ from Characters.character import Character
 
 class Stoneguard(Character):
     def __init__(self):
-        super().__init__(health=350, defense=25, base_attack=15, special_attack=0)
+        super().__init__(health=350, defense=25, base_attack=15, special_attack=0, base_attack_name='Rocky Punch', special_attack_name='Iron Fortress')
+
+    def __str__(self) -> str:
+        return f'Stoneguard'
 
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction

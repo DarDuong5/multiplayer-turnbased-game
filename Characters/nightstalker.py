@@ -2,7 +2,10 @@ from Characters.character import Character
 
 class Nightstalker(Character):
     def __init__(self):
-        super().__init__(health=100, defense=5, base_attack=80, special_attack=80)
+        super().__init__(health=100, defense=5, base_attack=80, special_attack=80, base_attack_name='Dagger Stab', special_attack_name='Silent Kill')
+    
+    def __str__(self) -> str:
+        return f'Nightstalker'
     
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction

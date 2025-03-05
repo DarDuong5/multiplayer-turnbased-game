@@ -5,11 +5,13 @@ if TYPE_CHECKING:
     from Status_Effects.status_effect import StatusEffect
     
 class Character(ABC):
-    def __init__(self, health: int, defense: int, base_attack: int, special_attack: int):
+    def __init__(self, health: int, defense: int, base_attack: int, special_attack: int, base_attack_name: str, special_attack_name: str):
         self._health = health
         self._defense = defense
         self._base_attack = base_attack
         self._special_attack = special_attack
+        self._base_attack_name = base_attack_name
+        self._special_attack_name = special_attack_name
         self._defense_active = False
         self._has_status_effect: bool = False
         self._status_effect_type: list[StatusEffect] = [] 
@@ -90,6 +92,22 @@ class Character(ABC):
     @can_attack.setter
     def can_attack(self, new_can_attack: bool) -> None:
         self._can_attack = new_can_attack
+
+    @property
+    def base_attack_name(self) -> str:
+        return self._base_attack_name
+    
+    @base_attack_name.setter
+    def base_attack_name(self, new_name: str) -> None:
+        self._base_attack_name = new_name
+
+    @property
+    def special_attack_name(self) -> str:
+        return self._special_attack_name
+    
+    @special_attack_name.setter
+    def special_attack_name(self, new_name: str) -> None:
+        self._special_attack_name = new_name
 
 # PYTESTS
 
