@@ -2,13 +2,14 @@ from typing import TYPE_CHECKING
 from Status_Effects.status_effect import StatusEffect
 import random
 import math
+import time
 
 if TYPE_CHECKING:
     from Characters.character import Character
 
 class Confusion(StatusEffect):
     def __init__(self):
-        super().__init__(damage=15, duration=2)
+        super().__init__(damage=15, duration=2, effect_type='Confusion')
 
     def __str__(self) -> str:
         return 'Confusion'
@@ -17,14 +18,22 @@ class Confusion(StatusEffect):
         chance = random.randint(1, 4)
         if chance == 1 and self not in target.status_effect_type:
             target.has_status_effect = True
-            target.status_effect_type.append(self)
-            self.duration = 2
+            target.status_effect_type.add(self)
+            self.duration = 3 # Technically 2 turns based on how the turn mechanics work
+            print(f'{target} has been confused!\n')
+            time.sleep(1.0)
 
     def update(self, target: 'Character') -> None:
-        target.health -= math.floor(target.base_attack * 0.25)
+        confusion_damage = math.floor(target.base_attack * 0.25)
+        target.health -= confusion_damage
         self.duration -= 1
-        if self.duration == 0:
+        print(f'{target} is confused and dealt {confusion_damage} to itself while attacking!\n'
+              f'{target} now has {target.health}!\n')
+        time.sleep(1.0)
+        if self.duration <= 0:
             self.remove_effect(target)
+            print(f'The confusion has worn off of {target}.\n')
+            time.sleep(1.0)
 
 # PYTESTS
 
@@ -34,17 +43,17 @@ def guaranteed_apply_helper(target: 'Character') -> None:
     confusion = Confusion()  # Create an instance of Confusion
     if confusion not in target.status_effect_type:
         target.has_status_effect = True
-        target.status_effect_type.append(confusion)  # Append the instance, not the class
+        target.status_effect_type.add(confusion)  # Append the instance, not the class
         confusion.duration = 2
 
 def test_apply() -> None:
     from Characters.dummy_character import DummyCharacter
     opponent = DummyCharacter()
     assert opponent.has_status_effect == False
-    assert opponent.status_effect_type == []
+    assert opponent.status_effect_type == set()
     guaranteed_apply_helper(opponent)
     assert opponent.has_status_effect == True
-    assert isinstance(opponent.status_effect_type[0], Confusion)  # Check instance
+    assert any(isinstance(effect, Confusion) for effect in opponent.status_effect_type)
 
 def test_update() -> None:
     from Characters.dummy_character import DummyCharacter

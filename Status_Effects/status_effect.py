@@ -5,9 +5,10 @@ if TYPE_CHECKING:
     from Characters.character import Character
 
 class StatusEffect(ABC):
-    def __init__(self, damage: int, duration: int):
+    def __init__(self, damage: int, duration: int, effect_type: str):
         self._damage = damage
         self._duration = duration
+        self.effect_type = effect_type
 
     @abstractmethod
     def apply(self, target: 'Character') -> None:
@@ -18,19 +19,24 @@ class StatusEffect(ABC):
         pass
 
     def remove_effect(self, target: 'Character') -> None:
-        if self in target.status_effect_type:
-            target.status_effect_type.remove(self)
+        # This ensures that the effect can be identified and removed based on its type
+        to_remove = [effect for effect in target.status_effect_type if effect.effect_type == self.effect_type]
+        for effect in to_remove:
+            target.status_effect_type.remove(effect)
+            print(f'Removed effect: {effect} from {target}')
+        
         if not target.status_effect_type:
             target.has_status_effect = False
-    
+            print(f'{target} no longer has any status effects.')
+
     @property
     def damage(self) -> int:
         return self._damage
     
     @damage.setter
     def damage(self, new_damage: int) -> None:
-        if new_damage < 0:
-            raise Exception('New damage cannot be below 0')
+        # if new_damage < 0:
+        #     raise Exception('New damage cannot be below 0')
         self._damage = new_damage
     
     @property
@@ -39,9 +45,17 @@ class StatusEffect(ABC):
     
     @duration.setter
     def duration(self, new_duration) -> None:
-        if new_duration < 0:
-            raise Exception('New duration cannot be below 0')
+        # if new_duration < 0:
+        #     raise Exception('New duration cannot be below 0')
         self._duration = new_duration
+
+    def __eq__(self, other):
+        # Compare based on effect type and other attributes (optional)
+        return isinstance(other, StatusEffect) and self.effect_type == other.effect_type
+
+    def __hash__(self):
+        # Hash based on the effect type
+        return hash(self.effect_type)
     
 # PYTESTS
 

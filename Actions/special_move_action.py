@@ -26,7 +26,7 @@ class SpecialMoveAction(Action):
     def titan_smash(self, target: 'Character') -> None:
         if self.user.special_attack_cooldown == 0:
             target.health -= self.damage - target.defense
-            self.user.special_attack_cooldown = 2
+            self.user.special_attack_cooldown = 3
     
     # Does damage to every opponent, can apply confusion
     def arcane_blast(self, targets: list['Character']) -> None:
@@ -35,14 +35,14 @@ class SpecialMoveAction(Action):
                 target._health -= self.damage - target.defense
                 Confusion().apply(target)
                 print(f'{target} took {self.damage - target.defense} damage and is now at {max(0, target._health)} health!\n')
-            self.user.special_attack_cooldown = 2
+            self.user.special_attack_cooldown = 3
 
     # Bypasses defenses, can apply stun
     def piercing_arrow(self, target: 'Character') -> None:
         if self.user.special_attack_cooldown == 0:
             target.health -= self.damage
             Paralyze().apply(target)
-            self.user.special_attack_cooldown = 2
+            self.user.special_attack_cooldown = 3
 
     def silent_kill(self, target: 'Character') -> None:
         if self.user.special_attack_cooldown == 0:
@@ -51,12 +51,19 @@ class SpecialMoveAction(Action):
             else:
                 target.health -= self.damage
             Poison().apply(target)
-            self.user.special_attack_cooldown = 2
+            self.user.special_attack_cooldown = 3
 
     def iron_fortress(self) -> None:
-        if self.user.special_attack_cooldown == 0:
-            self.user.defense += 15
-            self.user.special_attack_cooldown = 2
+        if isinstance(self.user, Stoneguard):
+            if self.user.special_attack_cooldown == 0:
+                self.user.defense += 15
+                self.user.iron_defense_duration = 3
+                self.user.iron_defense_active = True
+                self.user.special_attack_cooldown = 3
+                print(f'{self.user} activated Iron Fortress! Defense increased to {self.user.defense} for {self.user.iron_defense_duration} turns.\n')
+            else:
+                print(f'{self.user}\'s Iron Fortress is still on cooldown for {self.user.special_attack_cooldown} more turns!\n')
+
 
 # -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
@@ -81,7 +88,7 @@ def test_titan_smash() -> None:
     assert user.special_attack_cooldown == 0
     user_special_move_action.titan_smash(opponent)
     assert opponent.health == 100
-    assert user.special_attack_cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 def test_arcane_blast() -> None:
     user = Voidcaster()
@@ -95,7 +102,7 @@ def test_arcane_blast() -> None:
     user_special_move_action.arcane_blast([opponent_1, opponent_2])
     assert opponent_1.health == 45
     assert opponent_2.health == 200
-    assert user.special_attack_cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 def test_piercing_arrow() -> None: 
     user = Stormstriker()
@@ -106,7 +113,7 @@ def test_piercing_arrow() -> None:
     assert user.special_attack_cooldown == 0
     user_special_move_action.piercing_arrow(opponent)
     assert opponent.health == 190
-    assert user.special_attack_cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 def test_silent_kill_with_defense_off() -> None:
     user = Nightstalker()
@@ -117,7 +124,7 @@ def test_silent_kill_with_defense_off() -> None:
     assert user.special_attack_cooldown == 0
     user_special_move_action.silent_kill(opponent)
     assert opponent.health == -10
-    assert user.special_attack_cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 def test_silent_kill_with_defense_on() -> None:
     user = Nightstalker()
@@ -129,7 +136,7 @@ def test_silent_kill_with_defense_on() -> None:
     opponent.defend() 
     user_special_move_action.silent_kill(opponent)
     assert opponent.health == 70
-    assert user.special_attack_cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 def test_iron_fortress() -> None:
     user = Stoneguard()
@@ -139,6 +146,6 @@ def test_iron_fortress() -> None:
     assert user.defense == 25
     user_special_move_action.iron_fortress()
     assert user.defense == 40
-    assert user.special_attack_cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 

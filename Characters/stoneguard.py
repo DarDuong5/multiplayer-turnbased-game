@@ -1,11 +1,30 @@
 from Characters.character import Character
+import time
 
 class Stoneguard(Character):
     def __init__(self):
         super().__init__(health=350, defense=25, base_attack=15, special_attack=0, base_attack_name='Rocky Punch', special_attack_name='Iron Fortress')
+        self._iron_defense_duration = 0
+        self._iron_defense_active = False
 
     def __str__(self) -> str:
         return 'Stoneguard'
+    
+    @property
+    def iron_defense_duration(self) -> int:
+        return self._iron_defense_duration
+    
+    @iron_defense_duration.setter
+    def iron_defense_duration(self, duration: int) -> None:
+        self._iron_defense_duration = duration
+
+    @property
+    def iron_defense_active(self) -> bool:
+        return self._iron_defense_active
+    
+    @iron_defense_active.setter
+    def iron_defense_active(self, value: bool) -> None:
+        self._iron_defense_active = value
 
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
@@ -15,8 +34,17 @@ class Stoneguard(Character):
     def special_move(self) -> None:
         from Actions.special_move_action import SpecialMoveAction
         special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
-        special_move_action.iron_fortress(self)
+        special_move_action.iron_fortress()
     
+    def update_iron_defense(self) -> None:
+        if self.iron_defense_duration > 0:
+            self.iron_defense_duration -= 1
+        if self.iron_defense_duration == 0 and self._iron_defense_active:
+            self.defense -= 15
+            self.iron_defense_active = False
+            print(f'{self}\' Iron Defense has worn out!\n')
+            time.sleep(1.0)
+
 # PYTESTS
 
 def test_attack() -> None:
@@ -36,10 +64,10 @@ def test_defend() -> None:
     assert user.defense_active == True
 
 def test_special_move() -> None:
-    from Actions.special_move_action import SpecialMoveAction
     user = Stoneguard()
     assert user.health == 350
-    special_move_action = SpecialMoveAction(damage=user.special_attack, user=user)
-    special_move_action.iron_fortress()
+    assert user.defense == 25
+    user.special_attack_cooldown = 0
+    assert user.special_attack_cooldown == 0
+    user.special_move()
     assert user.defense == 40
-    

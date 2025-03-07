@@ -4,11 +4,18 @@ from Characters.stoneguard import Stoneguard
 from Characters.voidcaster import Voidcaster
 from Characters.stormstriker import Stormstriker
 from Characters.character import Character
+from Status_Effects.poison import Poison
+from Status_Effects.confusion import Confusion
+from Status_Effects.paralyze import Paralyze
 from typing import Optional, TYPE_CHECKING
 import time
 
 if TYPE_CHECKING:
     from Characters.character import Character
+    from Status_Effects.status_effect import StatusEffect
+    from Status_Effects.poison import Poison
+    from Status_Effects.confusion import Confusion
+    from Status_Effects.paralyze import Paralyze
 
 
 # Consists of 3 players. Player 1 will choose, then Player 2, and then Player 3
@@ -16,7 +23,8 @@ if TYPE_CHECKING:
 class BattleQueue:
     def __init__(self):
         self._player_queue: list = []
-        self._available_characters: dict['Character'] = {'1': Gladiator(), '2': Voidcaster(), '3': Stormstriker(), '4': Nightstalker(), '5': Stoneguard()}
+        self._available_characters: dict[str, 'Character'] = {'1': Gladiator(), '2': Voidcaster(), '3': Stormstriker(), '4': Nightstalker(), '5': Stoneguard()}
+        self._available_status_effects: dict[str, 'StatusEffect'] = {'Paralyze': Paralyze(), 'Poison': Poison(), 'Confusion': Confusion()}
 
     @property
     def player_queue(self) -> list['Character']:
@@ -27,8 +35,12 @@ class BattleQueue:
         self._player_queue = new_queue
 
     @property
-    def available_characters(self):
+    def available_characters(self) -> dict[str, 'Character']:
         return self._available_characters
+    
+    @property
+    def available_status_effects(self) -> dict[str, 'StatusEffect']:
+        return self._available_status_effects
 
     def begin_game(self) -> None:
         print('\nWelcome to Classical Strike Showdown!')
@@ -121,7 +133,7 @@ class BattleQueue:
         time.sleep(1.0)
         for j, opponent in enumerate(self.player_queue):
             if player_index != j:
-                print(f'Player {j + 1} ({opponent}) - Health: {opponent.health} | Defense: {opponent.defense}')
+                print(f'Player {j + 1} ({opponent}) - Health: {opponent.health} | Defense: {opponent.defense} | Status: {opponent.status_effect_type}')
                 available.append(str(j + 1))
                 time.sleep(1.0)
         
@@ -141,8 +153,26 @@ class BattleQueue:
             if player.special_attack_cooldown > 0:
                 player.special_attack_cooldown -= 1
             if player.defense_active:
-                player.update()
-            
+                player.update_defense()
+            if isinstance(player, Stoneguard) and player.iron_defense_active:
+                player.update_iron_defense()
+
+    def handle_status_effects(self, player: 'Character') -> bool:
+        # Check for Paralyze effect
+        if any(isinstance(effect, Paralyze) for effect in player.status_effect_type):
+            self.available_status_effects['Paralyze'].update(player)
+            return True  # Skip turn
+    
+        # Check for Confusion effect
+        if any(isinstance(effect, Confusion) for effect in player.status_effect_type):
+            self.available_status_effects['Confusion'].update(player)
+            return True  # Skip turn or apply damage
+    
+        # Handle Poison effects (no turn skip, just damage)
+        if any(isinstance(effect, Poison) for effect in player.status_effect_type):
+            self.available_status_effects['Poison'].update(player)
+           
+    
     def handle_base_attack(self, player: 'Character', player_index: int) -> None:
         available_opponents = self.append_available_opponents(player_index)
         target_index = self.choose_target(available_opponents)
@@ -162,6 +192,9 @@ class BattleQueue:
             time.sleep(1.5)
             targets = [opponent for i, opponent in enumerate(self.player_queue) if i != player_index]
             player.special_move(targets)
+            time.sleep(1.0)
+        elif isinstance(player, Stoneguard):
+            player.special_move()
             time.sleep(1.0)
         else:
             available_opponents = self.append_available_opponents(player_index)
@@ -200,10 +233,6 @@ class BattleQueue:
             print('Invalid choice. Please enter 1, 2, or 3.\n')
             time.sleep(1.0)
 
-        
-    # def handle_status_effects(self) -> None:
-    #     pass
-
     def during_game(self):
         turn_number: int = 0
         while len(self.player_queue) > 1:
@@ -215,7 +244,10 @@ class BattleQueue:
                     f'Turn {turn_number} | Player {i + 1} ({player}): What move do you choose?\n'
                     f'1. Attack: {player.base_attack_name} | 2. Defend: +10 Defense | 3. Special Move: {player.special_attack_name}\n'
                     'Available choices: 1 | 2 | 3\n'
-                )    
+                )
+                
+                if self.handle_status_effects(player):
+                    continue
 
                 self.handle_move(player, move, i)
                 self.handle_turns()

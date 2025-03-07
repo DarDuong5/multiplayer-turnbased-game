@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
 from Status_Effects.status_effect import StatusEffect
 import random
+import time 
 
 if TYPE_CHECKING:
     from Characters.character import Character
 
 class Paralyze(StatusEffect):
     def __init__(self):
-        super().__init__(damage=0, duration=2)
+        super().__init__(damage=0, duration=2, effect_type='Paralyze')
 
     def __str__(self) -> str:
         return 'Paralyze'
@@ -16,15 +17,21 @@ class Paralyze(StatusEffect):
         chance = random.randint(1, 4)
         if chance == 1 and self not in target.status_effect_type:
             target.has_status_effect = True
-            target.status_effect_type.append(self)
+            target.status_effect_type.add(self)
             target.can_attack = False
-            self.duration = 2
+            self.duration = 3 # Technically 2 turns based on how the turn mechanics work
+            print(f'{target} has been paralyzed!\n')
+            time.sleep(1.0)
 
     def update(self, target: 'Character') -> None:
         self.duration -= 1
-        if self.duration == 0:
+        print(f'{target} has been paralyzed and cannot move!\n')
+        time.sleep(1.0)
+        if self.duration <= 0:
             target.can_attack = True
             self.remove_effect(target)
+            print(f'The paralysis has worn off of {target}.\n')
+            time.sleep(1.0)
 
 # PYTESTS
 
@@ -34,7 +41,7 @@ def guaranteed_apply_helper(target: 'Character') -> None:
     paralyze = Paralyze()
     if paralyze not in target._status_effect_type:
         target.has_status_effect = True
-        target.status_effect_type.append(paralyze)
+        target.status_effect_type.add(paralyze)
         target.can_attack = False
         paralyze.duration = 2
 

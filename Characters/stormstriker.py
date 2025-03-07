@@ -37,11 +37,12 @@ def test_defend() -> None:
 
 def test_special_move() -> None:
     from Characters.stoneguard import Stoneguard
-    from Actions.special_move_action import SpecialMoveAction
     user = Stormstriker()
     opponent = Stoneguard()
     assert opponent.health == 350
-    special_move_action = SpecialMoveAction(damage=user.special_attack, cooldown=0, user=user)
-    special_move_action.piercing_arrow(opponent)
+    assert opponent.defense == 25
+    user.special_attack_cooldown = 0
+    assert user.special_attack_cooldown == 0
+    user.special_move(opponent)
     assert opponent.health == 290
-    assert special_move_action.cooldown == 60
+    assert user.special_attack_cooldown == 3

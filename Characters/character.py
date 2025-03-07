@@ -12,11 +12,11 @@ class Character(ABC):
         self._special_attack = special_attack
         self._base_attack_name = base_attack_name
         self._special_attack_name = special_attack_name
-        self._special_attack_cooldown = 2
+        self._special_attack_cooldown = 3
         self._defense_active = False
         self._defense_active_turns = 0
         self._has_status_effect: bool = False
-        self._status_effect_type: list[StatusEffect] = [] 
+        self._status_effect_type: set[StatusEffect] = set()
         self._can_attack = True
 
     @abstractmethod
@@ -128,7 +128,7 @@ class Character(ABC):
         defense_action = DefendAction(user=self) 
         defense_action.defend()
 
-    def update(self) -> None:
+    def update_defense(self) -> None:
         if self.defense_active_turns > 0:
             self.defense_active_turns -= 1
         if self.defense_active_turns == 0 and self.defense_active:
@@ -201,13 +201,13 @@ def test_set_defense_active() -> None:
 def test_get_status_effect_type() -> None:
     from Characters.dummy_character import DummyCharacter
     user = DummyCharacter()
-    assert user.status_effect_type == []
+    assert user.status_effect_type == set()
 
 def test_set_status_effect_type() -> None:
     from Characters.dummy_character import DummyCharacter
     from Status_Effects.poison import Poison
     user = DummyCharacter()
-    assert user.status_effect_type == []
+    assert user.status_effect_type == set()
     user.status_effect_type = [Poison]
     assert user.status_effect_type == [Poison]
 

@@ -36,29 +36,29 @@ def test_defend() -> None:
 
 def test_special_move_without_defense() -> None:
     from Characters.dummy_character import DummyCharacter
-    from Actions.special_move_action import SpecialMoveAction
     user = Nightstalker()
     opponent = DummyCharacter()
     assert opponent.health == 100
     assert opponent.defense_active == False
-    special_move_action = SpecialMoveAction(damage=user.special_attack, cooldown=0, user=user)
-    special_move_action.silent_kill(opponent)
+    user.special_attack_cooldown = 0
+    assert user.special_attack_cooldown == 0
+    user.special_move(opponent)
     assert opponent.health == -60
-    assert special_move_action.cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 def test_special_move_with_defense() -> None:
     from Characters.dummy_character import DummyCharacter
-    from Actions.special_move_action import SpecialMoveAction
     user = Nightstalker()
     opponent = DummyCharacter()
     assert opponent.health == 100
     assert opponent.defense_active == False
+    user.special_attack_cooldown = 0
+    assert user.special_attack_cooldown == 0
     opponent.defend()
     assert opponent.defense_active == True
-    special_move_action = SpecialMoveAction(damage=user.special_attack, cooldown=0, user=user)
-    special_move_action.silent_kill(opponent)
+    user.special_move(opponent)
     assert opponent.health == 20
-    assert special_move_action.cooldown == 2
+    assert user.special_attack_cooldown == 3
 
 
 

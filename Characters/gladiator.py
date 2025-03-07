@@ -37,13 +37,13 @@ def test_defend() -> None:
 
 def test_special_move() -> None:
     from Characters.dummy_character import DummyCharacter
-    from Actions.special_move_action import SpecialMoveAction
     user = Gladiator()
     opponent = DummyCharacter()
     assert opponent.health == 100
-    special_move_action = SpecialMoveAction(damage=user.special_attack, user=user)
-    special_move_action.titan_smash(opponent)
+    user.special_attack_cooldown = 0
+    assert user.special_attack_cooldown == 0
+    user.special_move(opponent)
     assert opponent.health == 50
-    assert special_move_action.cooldown == 2
+    assert user.special_attack_cooldown == 3
 
     

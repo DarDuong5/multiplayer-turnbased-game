@@ -1,13 +1,14 @@
 from typing import TYPE_CHECKING
 from Status_Effects.status_effect import StatusEffect
 import random
+import time
 
 if TYPE_CHECKING:
     from Characters.character import Character
 
 class Poison(StatusEffect):
     def __init__(self):
-        super().__init__(damage=5, duration=4)
+        super().__init__(damage=5, duration=4, effect_type='Poison')
 
     def __str__(self) -> str:
         return 'Poison'
@@ -16,14 +17,20 @@ class Poison(StatusEffect):
         chance = random.randint(1, 3)
         if chance == 1 and self not in target.status_effect_type:
             target.has_status_effect = True
-            target.status_effect_type.append(self)
-            self.duration = 4
+            target.status_effect_type.add(self)
+            self.duration = 5 # Technically 4 turns based on how the turn mechanics work
+            print(f'{target} has been poisoned!\n')
+            time.sleep(1.0)
 
     def update(self, target: 'Character') -> None:
         target.health -= self.damage
         self.duration -= 1
-        if self.duration == 0:
+        print(f'{target} is poisoned and the poison dealt {self.damage}!\n'
+              f'{target} now has {target.health}!\n')
+        time.sleep(1.0)
+        if self.duration <= 0:
             self.remove_effect(target)
+            print(f'The poison has worn off of {target}.\n')
 
 # PYTESTS
 

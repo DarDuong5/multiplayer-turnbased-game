@@ -13,7 +13,7 @@ class Voidcaster(Character):
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.dark_pulse(target)
 
-    def special_move(self, target: 'Character') -> None:
+    def special_move(self, target: list['Character']) -> None:
         from Actions.special_move_action import SpecialMoveAction
         special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.arcane_blast(target)
@@ -38,11 +38,18 @@ def test_defend() -> None:
 
 def test_special_move() -> None:
     from Characters.dummy_character import DummyCharacter
-    from Actions.special_move_action import SpecialMoveAction
     user = Voidcaster()
-    opponent = DummyCharacter()
-    assert opponent.health == 100
-    special_move_action = SpecialMoveAction(damage=user.special_attack, cooldown=0, user=user)
-    special_move_action.arcane_blast(opponent)
-    assert opponent.health == 40
-    assert special_move_action.cooldown == 2
+    opponent1 = DummyCharacter()
+    opponent2 = DummyCharacter()
+    opponent3 = DummyCharacter()
+    targets = [opponent1, opponent2, opponent3]
+    assert opponent1.health == 100
+    assert opponent2.health == 100
+    assert opponent3.health == 100
+    user.special_attack_cooldown = 0
+    assert user.special_attack_cooldown == 0
+    user.special_move(targets)
+    assert opponent1.health == 40
+    assert opponent2.health == 40
+    assert opponent3.health == 40
+    assert user.special_attack_cooldown == 3
