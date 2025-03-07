@@ -5,21 +5,16 @@ class Stoneguard(Character):
         super().__init__(health=350, defense=25, base_attack=15, special_attack=0, base_attack_name='Rocky Punch', special_attack_name='Iron Fortress')
 
     def __str__(self) -> str:
-        return f'Stoneguard'
+        return 'Stoneguard'
 
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.rocky_punch(target)
 
-    def defend(self) -> None:
-        from Actions.defend_action import DefendAction
-        defense_action = DefendAction(active_turns=0, user=self)
-        defense_action.defend()
-
     def special_move(self) -> None:
         from Actions.special_move_action import SpecialMoveAction
-        special_move_action = SpecialMoveAction(damage=self.special_attack, cooldown=2, user=self)
+        special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.iron_fortress(self)
     
 # PYTESTS
@@ -44,7 +39,7 @@ def test_special_move() -> None:
     from Actions.special_move_action import SpecialMoveAction
     user = Stoneguard()
     assert user.health == 350
-    special_move_action = SpecialMoveAction(damage=user.special_attack, cooldown=0, user=user)
+    special_move_action = SpecialMoveAction(damage=user.special_attack, user=user)
     special_move_action.iron_fortress()
     assert user.defense == 40
     

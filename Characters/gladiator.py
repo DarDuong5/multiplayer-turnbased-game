@@ -5,21 +5,16 @@ class Gladiator(Character):
         super().__init__(health=250, defense=10, base_attack=30, special_attack=50, base_attack_name='Sword Slash', special_attack_name='Titan Smash')
 
     def __str__(self) -> str:
-        return f'Gladiator'
+        return 'Gladiator'
     
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.sword_slash(target)
 
-    def defend(self) -> None:
-        from Actions.defend_action import DefendAction
-        defense_action = DefendAction(active_turns=0, user=self)
-        defense_action.defend()
-
     def special_move(self, target: 'Character') -> None:
         from Actions.special_move_action import SpecialMoveAction
-        special_move_action = SpecialMoveAction(damage=self.special_attack, cooldown=2, user=self)
+        special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.titan_smash(target)
 
 # PYTESTS
@@ -46,7 +41,7 @@ def test_special_move() -> None:
     user = Gladiator()
     opponent = DummyCharacter()
     assert opponent.health == 100
-    special_move_action = SpecialMoveAction(damage=user.special_attack, cooldown=0, user=user)
+    special_move_action = SpecialMoveAction(damage=user.special_attack, user=user)
     special_move_action.titan_smash(opponent)
     assert opponent.health == 50
     assert special_move_action.cooldown == 2

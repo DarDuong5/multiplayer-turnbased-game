@@ -10,6 +10,9 @@ class Confusion(StatusEffect):
     def __init__(self):
         super().__init__(damage=15, duration=2)
 
+    def __str__(self) -> str:
+        return 'Confusion'
+
     def apply(self, target: 'Character') -> None:
         chance = random.randint(1, 4)
         if chance == 1 and self not in target.status_effect_type:

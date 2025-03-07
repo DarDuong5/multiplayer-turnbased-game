@@ -12,17 +12,15 @@ class Character(ABC):
         self._special_attack = special_attack
         self._base_attack_name = base_attack_name
         self._special_attack_name = special_attack_name
+        self._special_attack_cooldown = 2
         self._defense_active = False
+        self._defense_active_turns = 0
         self._has_status_effect: bool = False
         self._status_effect_type: list[StatusEffect] = [] 
         self._can_attack = True
-        
-    @abstractmethod
-    def attack(self, target: 'Character') -> None:
-        pass
 
     @abstractmethod
-    def defend(self) -> None:
+    def attack(self, target: 'Character') -> None:
         pass
     
     @abstractmethod
@@ -108,6 +106,35 @@ class Character(ABC):
     @special_attack_name.setter
     def special_attack_name(self, new_name: str) -> None:
         self._special_attack_name = new_name
+
+    @property
+    def special_attack_cooldown(self) -> int:
+        return self._special_attack_cooldown
+    
+    @special_attack_cooldown.setter
+    def special_attack_cooldown(self, value: int) -> None:
+        self._special_attack_cooldown = value
+
+    @property
+    def defense_active_turns(self) -> int:
+        return self._defense_active_turns
+    
+    @defense_active_turns.setter
+    def defense_active_turns(self, value: int) -> int:
+        self._defense_active_turns = value
+
+    def defend(self) -> None:
+        from Actions.defend_action import DefendAction
+        defense_action = DefendAction(user=self) 
+        defense_action.defend()
+
+    def update(self) -> None:
+        if self.defense_active_turns > 0:
+            self.defense_active_turns -= 1
+        if self.defense_active_turns == 0 and self.defense_active:
+            self.defense -= 10
+            self.defense_active = False
+            print(f'{self}\' defense has worn out!\n')
 
 # PYTESTS
 

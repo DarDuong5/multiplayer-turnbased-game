@@ -5,21 +5,16 @@ class Nightstalker(Character):
         super().__init__(health=100, defense=5, base_attack=80, special_attack=80, base_attack_name='Dagger Stab', special_attack_name='Silent Kill')
     
     def __str__(self) -> str:
-        return f'Nightstalker'
+        return 'Nightstalker'
     
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.dagger_stab(target)
 
-    def defend(self) -> None:
-        from Actions.defend_action import DefendAction
-        defense_action = DefendAction(active_turns=0, user=self)
-        defense_action.defend()
-
     def special_move(self, target: 'Character') -> None:
         from Actions.special_move_action import SpecialMoveAction
-        special_move_action = SpecialMoveAction(damage=self.special_attack, cooldown=2, user=self)
+        special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.silent_kill(target)
     
 # PYTESTS

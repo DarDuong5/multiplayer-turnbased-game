@@ -6,10 +6,12 @@ from Characters.stormstriker import Stormstriker
 from Characters.stoneguard import Stoneguard
 from Actions.action import Action
 
+# To represent an attack action
 class AttackAction(Action):
     def __init__(self, damage: int, user: 'Character'):
         super().__init__(user)
         self._damage = damage
+    
     
     @property
     def damage(self) -> int:
@@ -37,7 +39,7 @@ class AttackAction(Action):
     def rocky_punch(self, target: 'Character') -> None:
         self._apply_damage(target)
 
-# PYTESTS 
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 def test_get_damage() -> None:
     gladiator: 'Character' = Gladiator()

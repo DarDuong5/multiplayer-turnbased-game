@@ -8,6 +8,9 @@ if TYPE_CHECKING:
 class Poison(StatusEffect):
     def __init__(self):
         super().__init__(damage=5, duration=4)
+
+    def __str__(self) -> str:
+        return 'Poison'
     
     def apply(self, target: 'Character') -> None:
         chance = random.randint(1, 3)

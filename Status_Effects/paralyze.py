@@ -8,6 +8,9 @@ if TYPE_CHECKING:
 class Paralyze(StatusEffect):
     def __init__(self):
         super().__init__(damage=0, duration=2)
+
+    def __str__(self) -> str:
+        return 'Paralyze'
     
     def apply(self, target: 'Character') -> None:
         chance = random.randint(1, 4)

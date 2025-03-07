@@ -5,19 +5,25 @@ from Characters.nightstalker import Nightstalker
 from Characters.stormstriker import Stormstriker
 from Characters.stoneguard import Stoneguard
 
+# To represent an action
 class Action:
     def __init__(self, user: 'Character'):
         self._user = user
 
+    # Signature: None -> Character
+    # Purpose: Gets and returns the character
     @property
     def user(self) -> 'Character':
         return self._user
     
+    # Signature: Character -> None
+    # Purpose: Sets and updates the character
     @user.setter
     def user(self, new_user: 'Character') -> None:
         self._user = new_user
 
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
+
 def test_get_user() -> None:
     gladiator = Gladiator()
     gladiator_action = Action(gladiator)

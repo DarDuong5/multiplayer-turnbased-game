@@ -1,25 +1,21 @@
 from Characters.character import Character
 
+
 class Voidcaster(Character):
     def __init__(self):
         super().__init__(health=125, defense=0, base_attack=50, special_attack=60, base_attack_name='Dark Pulse', special_attack_name='Arcane Blast')
 
     def __str__(self) -> str:
-        return f'Voidcaster'
+        return 'Voidcaster'
     
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.dark_pulse(target)
 
-    def defend(self) -> None:
-        from Actions.defend_action import DefendAction
-        defense_action = DefendAction(active_turns=0, user=self)
-        defense_action.defend()
-
     def special_move(self, target: 'Character') -> None:
         from Actions.special_move_action import SpecialMoveAction
-        special_move_action = SpecialMoveAction(damage=self.special_attack, cooldown=2, user=self)
+        special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.arcane_blast(target)
     
 # PYTESTS

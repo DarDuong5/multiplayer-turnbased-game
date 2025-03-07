@@ -7,11 +7,6 @@ class DummyCharacter(Character):
     def attack(self, target: 'Character') -> None:
         pass  
 
-    def defend(self) -> None:
-        from Actions.defend_action import DefendAction
-        defense_action = DefendAction(active_turns=0, user=self)
-        defense_action.defend()
-
     def special_move(self, target: 'Character') -> None:
         pass
 
