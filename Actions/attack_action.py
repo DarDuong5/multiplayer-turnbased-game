@@ -12,30 +12,45 @@ class AttackAction(Action):
         super().__init__(user)
         self._damage = damage
     
-    
+    # Signature: None -> int:
+    # Purpose: Gets and returns the damage of the attack action
     @property
     def damage(self) -> int:
         return self._damage
     
+    # Signature: int -> None:
+    # Purpose: Sets and updates the damage of the attack action
     @damage.setter
     def damage(self, new_damage: int) -> None:
         self._damage = new_damage
 
+    # Signature: Character -> None:
+    # Purpose: Updates the target opponent's health after applying the damage minus their defense
     def _apply_damage(self, target: 'Character') -> None:
         target._health -= max(0, self._damage - target._defense)
 
+    # Signature: Character -> None:
+    # Purpose: Applys the damage to the target after using the move Sword Slash
     def sword_slash(self, target: 'Character') -> None:
         self._apply_damage(target)
     
+    # Signature: Character -> None:
+    # Purpose: Applys the damage to the target after using the move Dark Pulse
     def dark_pulse(self, target: 'Character') -> None:
         self._apply_damage(target)
 
+    # Signature: Character -> None:
+    # Purpose: Applys the damage to the target after using the move Electric Arrow
     def electric_arrow(self, target: 'Character') -> None:
         self._apply_damage(target)
 
+    # Signature: Character -> None:
+    # Purpose: Applys the damage to the target after using the move Dagger Stab
     def dagger_stab(self, target: 'Character') -> None:
         self._apply_damage(target)
      
+    # Signature: Character -> None:
+    # Purpose: Applys the damage to the target after using the move Rocky Punch
     def rocky_punch(self, target: 'Character') -> None:
         self._apply_damage(target)
 

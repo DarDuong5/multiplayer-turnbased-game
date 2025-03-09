@@ -7,13 +7,18 @@ import time
 if TYPE_CHECKING:
     from Characters.character import Character
 
+# To represent a confusion status effect
 class Confusion(StatusEffect):
     def __init__(self):
         super().__init__(damage=15, duration=2, effect_type='Confusion')
 
+    # Signature: None -> str
+    # Purpose: Returns the name of the this status effect
     def __str__(self) -> str:
         return 'Confusion'
 
+    # Signature: Character -> None
+    # Purpose: A chance to apply confusion on the target after using a special attack move
     def apply(self, target: 'Character') -> None:
         chance = random.randint(1, 4)
         if chance == 1 and self not in target.status_effect_type:
@@ -23,6 +28,8 @@ class Confusion(StatusEffect):
             print(f'{target} has been confused!\n')
             time.sleep(1.0)
 
+    # Signature: Character -> None
+    # Purpose: Updates the status effect on the target as well as the duration. The target will not be able to attack and will hurt itself while attacking for the duration.
     def update(self, target: 'Character') -> None:
         confusion_damage = math.floor(target.base_attack * 0.25)
         target.health -= confusion_damage
@@ -35,7 +42,7 @@ class Confusion(StatusEffect):
             print(f'The confusion has worn off of {target}.\n')
             time.sleep(1.0)
 
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 # Signature: Character -> None
 # Purpose: Helper method used for testing that guarantees the status effect instead of random chance

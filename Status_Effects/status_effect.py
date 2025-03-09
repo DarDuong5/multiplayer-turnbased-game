@@ -1,23 +1,30 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 if TYPE_CHECKING:
     from Characters.character import Character
 
+# To represent a status effect
 class StatusEffect(ABC):
     def __init__(self, damage: int, duration: int, effect_type: str):
         self._damage = damage
         self._duration = duration
         self.effect_type = effect_type
 
+    # Signature: Character -> None
+    # Purpose: A chance to apply status effect on the target after using a special attack move
     @abstractmethod
     def apply(self, target: 'Character') -> None:
         pass
 
+    # Signature: Character -> None
+    # Purpose: Updates the status effect on the target as well as the duration.
     @abstractmethod
     def update(self, target: 'Character') -> None:
         pass
 
+    # Signature: Character -> None
+    # Purpose: Removes the status effect from the target after the duration runs out
     def remove_effect(self, target: 'Character') -> None:
         # This ensures that the effect can be identified and removed based on its type
         to_remove = [effect for effect in target.status_effect_type if effect.effect_type == self.effect_type]
@@ -29,35 +36,41 @@ class StatusEffect(ABC):
             target.has_status_effect = False
             print(f'{target} no longer has any status effects.')
 
+    # Signature: None -> int
+    # Purpose: Gets and returns the damage of the status effect
     @property
     def damage(self) -> int:
         return self._damage
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the damage of the status effect
     @damage.setter
     def damage(self, new_damage: int) -> None:
-        # if new_damage < 0:
-        #     raise Exception('New damage cannot be below 0')
         self._damage = new_damage
     
+    # Signature: None -> int
+    # Purpose: Gets and returns the duration of the status effect
     @property
     def duration(self) -> int:
         return self._duration
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the duration of the status effect
     @duration.setter
-    def duration(self, new_duration) -> None:
-        # if new_duration < 0:
-        #     raise Exception('New duration cannot be below 0')
+    def duration(self, new_duration: int) -> None:
         self._duration = new_duration
 
-    def __eq__(self, other):
-        # Compare based on effect type and other attributes (optional)
+    # Signature: Optional -> None
+    # Purpose: Compares based on effect type and other attributes (optional)
+    def __eq__(self, other: Optional['StatusEffect']) -> bool:
         return isinstance(other, StatusEffect) and self.effect_type == other.effect_type
 
-    def __hash__(self):
-        # Hash based on the effect type
+    # Signature: None -> int
+    # Purpose: Hashes based on the effect type that uniquely identifies an object based on its attributes
+    def __hash__(self) -> int:
         return hash(self.effect_type)
     
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 # Signature: Character -> None
 # Purpose: Helper method used for testing that guarantees the status effect instead of random chance

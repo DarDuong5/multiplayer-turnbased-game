@@ -4,10 +4,13 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Characters.character import Character
 
+# To represent a defend action
 class DefendAction(Action): 
     def __init__(self, user: 'Character'):
         super().__init__(user)
     
+    # Signature: None -> None
+    # Purpose: Applies defense to the user and sets the duration for defending
     def defend(self) -> None:
         if not self.user.defense_active:
             self.user.defense += 10

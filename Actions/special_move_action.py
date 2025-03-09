@@ -10,25 +10,33 @@ from Status_Effects.confusion import Confusion
 from Status_Effects.paralyze import Paralyze
 from Status_Effects.poison import Poison
 
+# To represent a special move action
 class SpecialMoveAction(Action):
     def __init__(self, damage: int, user: 'Character'):
         super().__init__(user)
         self._damage = damage
-        
+
+    # Signature: None -> int:
+    # Purpose: Gets and returns the damage of the attack action
     @property
     def damage(self) -> int:
         return self._damage
     
+    # Signature: int -> None:
+    # Purpose: Sets and updates the damage of the attack action
     @damage.setter
     def damage(self, new_damage: int) -> None:
         self._damage = new_damage
     
+    # Signature: Character -> None:
+    # Purpose: Applies damage to the target minus the defense and sets the special attack cooldown after using the move Titan Smash for Gladiator
     def titan_smash(self, target: 'Character') -> None:
         if self.user.special_attack_cooldown == 0:
             target.health -= self.damage - target.defense
             self.user.special_attack_cooldown = 3
     
-    # Does damage to every opponent, can apply confusion
+    # Signature: Character -> None:
+    # Purpose: Applies damage to the target minus the defense and sets the special attack cooldown after using the move Arcane Blast for Voidcaster
     def arcane_blast(self, targets: list['Character']) -> None:
         if self.user.special_attack_cooldown == 0:
             for target in targets:
@@ -37,13 +45,16 @@ class SpecialMoveAction(Action):
                 print(f'{target} took {self.damage - target.defense} damage and is now at {max(0, target._health)} health!\n')
             self.user.special_attack_cooldown = 3
 
-    # Bypasses defenses, can apply stun
+    # Signature: Character -> None:
+    # Purpose: Applies damage to the target minus the defense and sets the special attack cooldown after using the move Piercing Arrow for Stormstriker
     def piercing_arrow(self, target: 'Character') -> None:
         if self.user.special_attack_cooldown == 0:
             target.health -= self.damage
             Paralyze().apply(target)
             self.user.special_attack_cooldown = 3
 
+    # Signature: Character -> None:
+    # Purpose: Applies damage to the target minus the defense and sets the special attack cooldown after using the move Silent Kill for Nightstalker
     def silent_kill(self, target: 'Character') -> None:
         if self.user.special_attack_cooldown == 0:
             if not target.defense_active:
@@ -53,6 +64,8 @@ class SpecialMoveAction(Action):
             Poison().apply(target)
             self.user.special_attack_cooldown = 3
 
+    # Signature: Character -> None:
+    # Purpose: Applies defense to the user and sets the duration and special attack cooldown after using the move Iron Fortress for Stoneguard
     def iron_fortress(self) -> None:
         if isinstance(self.user, Stoneguard):
             if self.user.special_attack_cooldown == 0:

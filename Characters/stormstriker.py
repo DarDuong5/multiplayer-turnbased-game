@@ -1,23 +1,30 @@
 from Characters.character import Character
 
+# To represent a stormstriker character
 class Stormstriker(Character):
     def __init__(self):
         super().__init__(health=150, defense=0, base_attack=40, special_attack=60, base_attack_name='Electric Arrow', special_attack_name='Piercing Arrow')
 
+    # Signature: None -> str
+    # Purpose: Returns the name of the this character
     def __str__(self) -> str:
         return 'Stormstriker'
 
+    # Signature: Character -> None
+    # Purpose: Allows the character to attack the target
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.electric_arrow(target)
 
+    # Signature: Character -> None
+    # Purpose: Allows the character to perform a special move at the target
     def special_move(self, target: 'Character') -> None:
         from Actions.special_move_action import SpecialMoveAction
         special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.piercing_arrow(target)
 
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 def test_attack() -> None:
     from Characters.dummy_character import DummyCharacter

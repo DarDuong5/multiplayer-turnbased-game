@@ -6,13 +6,18 @@ import time
 if TYPE_CHECKING:
     from Characters.character import Character
 
+# To represent a poison status effect
 class Poison(StatusEffect):
     def __init__(self):
         super().__init__(damage=5, duration=4, effect_type='Poison')
 
+    # Signature: None -> str
+    # Purpose: Returns the name of the this status effect
     def __str__(self) -> str:
         return 'Poison'
     
+    # Signature: Character -> None
+    # Purpose: A chance to apply poison on the target after using a special attack move
     def apply(self, target: 'Character') -> None:
         chance = random.randint(1, 3)
         if chance == 1 and self not in target.status_effect_type:
@@ -22,6 +27,8 @@ class Poison(StatusEffect):
             print(f'{target} has been poisoned!\n')
             time.sleep(1.0)
 
+    # Signature: Character -> None
+    # Purpose: Updates the status effect on the target as well as the duration. The target will take damage every turn for the duration.
     def update(self, target: 'Character') -> None:
         target.health -= self.damage
         self.duration -= 1
@@ -32,7 +39,7 @@ class Poison(StatusEffect):
             self.remove_effect(target)
             print(f'The poison has worn off of {target}.\n')
 
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 # Signature: Character -> None
 # Purpose: Helper method used for testing that guarantees the status effect instead of random chance
@@ -40,17 +47,17 @@ def guaranteed_apply_helper(target: 'Character') -> None:
     poison = Poison()
     if poison not in target.status_effect_type:
         target.has_status_effect = True
-        target.status_effect_type.append(poison)
+        target.status_effect_type.add(poison)
         poison.duration = 4
 
 def test_apply() -> None:
     from Characters.dummy_character import DummyCharacter
     opponent = DummyCharacter()
     assert opponent.has_status_effect == False
-    assert opponent.status_effect_type == []
+    assert opponent.status_effect_type == set()
     guaranteed_apply_helper(opponent)
     assert opponent.has_status_effect == True
-    assert isinstance(opponent.status_effect_type[0], Poison)
+    assert any(isinstance(effect, Poison) for effect in opponent.status_effect_type)
 
 def test_update() -> None:
     from Characters.dummy_character import DummyCharacter

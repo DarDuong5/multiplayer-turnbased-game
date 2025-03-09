@@ -1,23 +1,30 @@
 from Characters.character import Character
 
+# To represent a Nightstalker character
 class Nightstalker(Character):
     def __init__(self):
         super().__init__(health=100, defense=5, base_attack=80, special_attack=80, base_attack_name='Dagger Stab', special_attack_name='Silent Kill')
-    
+
+    # Signature: None -> str
+    # Purpose: Returns the name of the this character 
     def __str__(self) -> str:
         return 'Nightstalker'
-    
+
+    # Signature: Character -> None
+    # Purpose: Allows the character to attack the target  
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.dagger_stab(target)
 
+    # Signature: Character -> None
+    # Purpose: Allows the character to perform a special move at the target
     def special_move(self, target: 'Character') -> None:
         from Actions.special_move_action import SpecialMoveAction
         special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.silent_kill(target)
     
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 def test_attack() -> None:
     user = Nightstalker()

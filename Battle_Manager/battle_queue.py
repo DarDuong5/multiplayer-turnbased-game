@@ -17,31 +17,39 @@ if TYPE_CHECKING:
     from Status_Effects.confusion import Confusion
     from Status_Effects.paralyze import Paralyze
 
-
-# Consists of 3 players. Player 1 will choose, then Player 2, and then Player 3
-
+# To represent a battle queue
 class BattleQueue:
     def __init__(self):
         self._player_queue: list = []
         self._available_characters: dict[str, 'Character'] = {'1': Gladiator(), '2': Voidcaster(), '3': Stormstriker(), '4': Nightstalker(), '5': Stoneguard()}
         self._available_status_effects: dict[str, 'StatusEffect'] = {'Paralyze': Paralyze(), 'Poison': Poison(), 'Confusion': Confusion()}
 
+    # Signature: None -> list[Character]
+    # Purpose: Gets and returns the player queue
     @property
     def player_queue(self) -> list['Character']:
         return self._player_queue
     
+    # Signature: list[Character] -> None
+    # Purpose: Sets and updates the player queue
     @player_queue.setter
     def player_queue(self, new_queue: list['Character']) -> None:
         self._player_queue = new_queue
 
+    # Signature: None -> dict[str, Character]
+    # Purpose: Gets and returns the available characters
     @property
     def available_characters(self) -> dict[str, 'Character']:
         return self._available_characters
     
+    # Signature: None -> dict[str, StatusEffect]
+    # Purpose: Gets and return the available status effects
     @property
     def available_status_effects(self) -> dict[str, 'StatusEffect']:
         return self._available_status_effects
 
+    # Signature: None -> None
+    # Purpose: Prints the introduction to the game for the player(s)
     def begin_game(self) -> None:
         print('\nWelcome to Classical Strike Showdown!')
         time.sleep(2.0)
@@ -58,6 +66,8 @@ class BattleQueue:
         print('Without further ADOOOO, let the games begin!\n')
         time.sleep(2.0)
 
+    # Signature: None -> None
+    # Purpose: Prints and shows the available characters along with their description for the player(s) to choose
     def show_character(self):
         print('The character available are as follows: \n')
         time.sleep(2.0)
@@ -107,6 +117,8 @@ class BattleQueue:
               'Every player will only have their own unique characters; no duplicates.\n')
         time.sleep(1.5)
 
+    # Signature: int -> None
+    # Purpose: Makes the player input the character they want to choose and appends to the player queue
     def choose_character(self, player_number: int) -> None:
         while True:
             player_choice = input(f'Player {player_number} choose your character: ')
@@ -123,10 +135,14 @@ class BattleQueue:
                 print(f'Invalid Choice: {player_choice}. Please choose a valid character.')
                 time.sleep(1.0)
 
+    # Signature: None -> None
+    # Purpose: Allows a number of players to select their characters
     def start_character_selection(self) -> None:
         for i in range(1, 4):
             self.choose_character(i)
 
+    # Signature: int -> list[str]
+    # Purpose: Shows the available opponents for the user after using an attack move
     def append_available_opponents(self, player_index: int) -> list[str]: 
         available: list[str] = []       
         print('\nAvailable opponents:')
@@ -136,9 +152,10 @@ class BattleQueue:
                 print(f'Player {j + 1} ({opponent}) - Health: {opponent.health} | Defense: {opponent.defense} | Status: {opponent.status_effect_type}')
                 available.append(str(j + 1))
                 time.sleep(1.0)
-        
         return available
     
+    # Signature: list[str] -> int
+    # Purpose: Prompts and makes the user select an opponent to attack, returning the opponent
     def choose_target(self, available: list[str]) -> int:
         while True: 
             target = input('\nWho do you want to attack? (Choose the player number)\n')
@@ -148,6 +165,8 @@ class BattleQueue:
             else:
                 return int(target) - 1
 
+    # Signature: None -> None
+    # Purpose: Handles the turn mechanics of the game such as updating duration and cooldown
     def handle_turns(self) -> None:
         for player in self.player_queue:
             if player.special_attack_cooldown > 0:
@@ -156,7 +175,10 @@ class BattleQueue:
                 player.update_defense()
             if isinstance(player, Stoneguard) and player.iron_defense_active:
                 player.update_iron_defense()
+            # THINKING ABOUT PUTTING STATUS EFFECTS HERE
 
+    # Signature: Character -> bool
+    # Purpose: Updates the status effect on the player and skips the players turn depending on the status effect
     def handle_status_effects(self, player: 'Character') -> bool:
         # Check for Paralyze effect
         if any(isinstance(effect, Paralyze) for effect in player.status_effect_type):
@@ -172,7 +194,8 @@ class BattleQueue:
         if any(isinstance(effect, Poison) for effect in player.status_effect_type):
             self.available_status_effects['Poison'].update(player)
            
-    
+    # Signature: Character, int -> None
+    # Purpose: Allows the player to attack the selected opponent using the base attack of the player's character
     def handle_base_attack(self, player: 'Character', player_index: int) -> None:
         available_opponents = self.append_available_opponents(player_index)
         target_index = self.choose_target(available_opponents)
@@ -185,7 +208,9 @@ class BattleQueue:
 
         print(f'Player {target_index + 1}\'s ({target_player}) health now is at {max(0, target_player.health)}!\n')
         time.sleep(1.0)
-       
+    
+    # Signature: Character, int -> None
+    # Purpose: Allows the player to use the special attack on a single or multiple targets or on themselves depending on the player's character
     def handle_special_attack(self, player: 'Character', player_index: int) -> None:
         if isinstance(player, Voidcaster):
             print(f'Player {player_index + 1} ({player}) used {player.special_attack_name} and attacked ALL opponents!\n')
@@ -209,6 +234,8 @@ class BattleQueue:
             print(f'Player {target_index + 1}\'s ({target_player}) health now is at {max(0, target_player.health)}!\n')
             time.sleep(1.0)
 
+    # Signature: Character, str, int -> None
+    # Purpose: Handles and executes the move that the player chose
     def handle_move(self, player: 'Character', move: str, player_index: int) -> None:
         # Base Attack 
         if move == '1':
@@ -233,18 +260,18 @@ class BattleQueue:
             print('Invalid choice. Please enter 1, 2, or 3.\n')
             time.sleep(1.0)
 
+    # Signature: None -> None
+    # Purpose: Handles everything that goes in within the game
     def during_game(self):
         turn_number: int = 0
         while len(self.player_queue) > 1:
             for i, player in enumerate(self.player_queue):
                 turn_number += 1
-                move = input(
-                    f'Player {i + 1} ({player}) | Status: {','.join(str(effect) for effect in player.status_effect_type) if player.status_effect_type else 'None'} | Cooldown: {player.special_attack_cooldown}\n'
-                    f'Health: {player.health} | Defense: {player.defense}\n'
-                    f'Turn {turn_number} | Player {i + 1} ({player}): What move do you choose?\n'
-                    f'1. Attack: {player.base_attack_name} | 2. Defend: +10 Defense | 3. Special Move: {player.special_attack_name}\n'
-                    'Available choices: 1 | 2 | 3\n'
-                )
+                move = input(f'Player {i + 1} ({player}) | Status: {','.join(str(effect) for effect in player.status_effect_type) if player.status_effect_type else 'None'} | Cooldown: {player.special_attack_cooldown}\n'
+                             f'Health: {player.health} | Defense: {player.defense}\n'
+                             f'Turn {turn_number} | Player {i + 1} ({player}): What move do you choose?\n'
+                             f'1. Attack: {player.base_attack_name} | 2. Defend: +10 Defense | 3. Special Move: {player.special_attack_name}\n'
+                             'Available choices: 1 | 2 | 3\n')
                 
                 if self.handle_status_effects(player):
                     continue
@@ -255,6 +282,8 @@ class BattleQueue:
 
         self.end_game()
     
+    # Signature: None -> None
+    # Purpose: Removes the player from the game when they're defeated
     def remove_player(self) -> None:
         """Removes players with 0 health from the game."""
         defeated_players = [player for player in self.player_queue if player.health <= 0]
@@ -264,10 +293,23 @@ class BattleQueue:
             self.player_queue.remove(player)
             time.sleep(1.0)
 
+    # Signature: None -> str
+    # Purpose: Ends the game when one player remain, declaring them the winner
     def end_game(self) -> str:
         time.sleep(1.5)
         if len(self.player_queue) == 1:
             print(f'{self.player_queue[0]} has won!\n')
         else:
             print('No players remain! This game ends in a draw.\n')
+
+    # Signature: None -> None
+    # Purpose: Runs the entire game
+    def run_game(self) -> None:
+        self.begin_game()
+        self.show_character()
+        self.start_character_selection()
+        self.during_game()
+
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
+
             

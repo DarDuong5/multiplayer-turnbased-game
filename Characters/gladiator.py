@@ -1,23 +1,30 @@
 from Characters.character import Character
 
+# To represent a Gladiator character
 class Gladiator(Character):
     def __init__(self):
         super().__init__(health=250, defense=10, base_attack=30, special_attack=50, base_attack_name='Sword Slash', special_attack_name='Titan Smash')
 
+    # Signature: None -> str
+    # Purpose: Returns the name of the this character
     def __str__(self) -> str:
         return 'Gladiator'
     
+    # Signature: Character -> None
+    # Purpose: Allows the character to attack the target
     def attack(self, target: 'Character') -> None:
         from Actions.attack_action import AttackAction
         attack_action = AttackAction(damage=self.base_attack, user=self)
         attack_action.sword_slash(target)
 
+    # Signature: Character -> None
+    # Purpose: Allows the character to perform a special move at the target
     def special_move(self, target: 'Character') -> None:
         from Actions.special_move_action import SpecialMoveAction
         special_move_action = SpecialMoveAction(damage=self.special_attack, user=self)
         special_move_action.titan_smash(target)
 
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 def test_attack() -> None:
     from Characters.dummy_character import DummyCharacter

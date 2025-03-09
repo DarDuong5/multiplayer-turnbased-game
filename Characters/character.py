@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Status_Effects.status_effect import StatusEffect
     
+# To represent a character
 class Character(ABC):
     def __init__(self, health: int, defense: int, base_attack: int, special_attack: int, base_attack_name: str, special_attack_name: str):
         self._health = health
@@ -12,122 +13,178 @@ class Character(ABC):
         self._special_attack = special_attack
         self._base_attack_name = base_attack_name
         self._special_attack_name = special_attack_name
-        self._special_attack_cooldown = 3
-        self._defense_active = False
-        self._defense_active_turns = 0
+        self._special_attack_cooldown: int = 3
+        self._defense_active: bool = False
+        self._defense_active_turns: int = 0
         self._has_status_effect: bool = False
         self._status_effect_type: set[StatusEffect] = set()
-        self._can_attack = True
+        self._can_attack: bool = True
 
+    # Signature: Character -> None
+    # Purpose: Allows the character to attack the target
     @abstractmethod
     def attack(self, target: 'Character') -> None:
         pass
     
+    # Signature: Character -> None
+    # Purpose: Allows the character to perform a special move at the target
     @abstractmethod
     def special_move(self, target: 'Character') -> None:
         pass
-
+    
+    # Signature: None -> int
+    # Purpose: Gets and returns the health of the character
     @property
     def health(self) -> int:
         return self._health
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the health of the character
     @health.setter
     def health(self, new_health: int) -> None:
         self._health = new_health
-
+    
+    # Signature: None -> int
+    # Purpose: Gets and returns the defense of the character
     @property
     def defense(self) -> int:
         return self._defense
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the defense of the character
     @defense.setter
     def defense(self, new_defense: int) -> None:
         self._defense = new_defense
 
+    # Signature: None -> int
+    # Purpose: Gets and returns the base attack damage of the character
     @property
     def base_attack(self) -> int:
         return self._base_attack 
 
+    # Signature: int -> None
+    # Purpose: Sets and updates the base attack damage of the character
     @base_attack.setter
     def base_attack(self, new_base_attack: int) -> None:
         self._base_attack = new_base_attack
 
+    # Signature: None -> int
+    # Purpose: Gets and returns the special attack damage of the character
     @property
     def special_attack(self) -> int:
         return self._special_attack
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the special attack damage of the character
     @special_attack.setter
     def special_attack(self, new_special_attack: int) -> None:
         self._special_attack = new_special_attack
-    
+
+    # Signature: None -> bool
+    # Purpose: Gets and returns if the defense of the character is active or not
     @property
     def defense_active(self) -> bool:
         return self._defense_active
-    
+
+    # Signature: bool -> None
+    # Purpose: Sets and updates if the defense of the character is active or not
     @defense_active.setter
     def defense_active(self, new_defense_active: bool) -> None:
         self._defense_active = new_defense_active
 
+    # Signature: None -> bool
+    # Purpose: Gets and returns if the character has a status effect or not
     @property 
     def has_status_effect(self) -> bool:
         return self._has_status_effect 
-    
+
+    # Signature: bool -> None
+    # Purpose: Sets and updates if the defense of the character is active or not
     @has_status_effect.setter
     def has_status_effect(self, new_has_status_effect: bool) -> None:
         self._has_status_effect = new_has_status_effect
     
+    # Signature: None -> list[StatusEffect]
+    # Purpose: Gets and returns the status effect type
     @property
     def status_effect_type(self) -> list['StatusEffect']:
         return self._status_effect_type
-    
+
+    # Signature: list[StatusEffect] -> None
+    # Purpose: Sets and updates the status effect type
     @status_effect_type.setter
     def status_effect_type(self, new_status_effect_type: list['StatusEffect']) -> None:
         self._status_effect_type = new_status_effect_type
-    
+
+    # Signature: None -> bool
+    # Purpose: Gets and returns if the character can attack or not
     @property
     def can_attack(self) -> bool:
         return self._can_attack
     
+    # Signature: bool -> None
+    # Purpose: Sets and updates if the character can attack or not
     @can_attack.setter
     def can_attack(self, new_can_attack: bool) -> None:
         self._can_attack = new_can_attack
 
+    # Signature: None -> str
+    # Purpose: Gets and returns the base attack name of the character
     @property
     def base_attack_name(self) -> str:
         return self._base_attack_name
     
+    # Signature: str -> None
+    # Purpose: Sets and updates the base attack name of the character
     @base_attack_name.setter
     def base_attack_name(self, new_name: str) -> None:
         self._base_attack_name = new_name
 
+    # Signature: None -> str
+    # Purpose: Gets and returns the special attack name of the character
     @property
     def special_attack_name(self) -> str:
         return self._special_attack_name
     
+    # Signature: str -> None
+    # Purpose: Sets and updates the special attack name of the character
     @special_attack_name.setter
     def special_attack_name(self, new_name: str) -> None:
         self._special_attack_name = new_name
 
+    # Signature: None -> int
+    # Purpose: Gets and returns the special attack cooldown of the character
     @property
     def special_attack_cooldown(self) -> int:
         return self._special_attack_cooldown
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the special attack cooldown of the character
     @special_attack_cooldown.setter
     def special_attack_cooldown(self, value: int) -> None:
         self._special_attack_cooldown = value
 
+    # Signature: None -> int
+    # Purpose: Gets and returns the duration of the defense
     @property
     def defense_active_turns(self) -> int:
         return self._defense_active_turns
     
+    # Signature: int -> None
+    # Purpose: Sets and updates the duration of the defense
     @defense_active_turns.setter
-    def defense_active_turns(self, value: int) -> int:
+    def defense_active_turns(self, value: int) -> None:
         self._defense_active_turns = value
 
+    # Signature: None -> None
+    # Purpose: Allows the character to defend
     def defend(self) -> None:
         from Actions.defend_action import DefendAction
         defense_action = DefendAction(user=self) 
         defense_action.defend()
 
+    # Signature: None -> None
+    # Purpose: Updates character's defense and duration every turn
     def update_defense(self) -> None:
         if self.defense_active_turns > 0:
             self.defense_active_turns -= 1
@@ -136,7 +193,7 @@ class Character(ABC):
             self.defense_active = False
             print(f'{self}\' defense has worn out!\n')
 
-# PYTESTS
+# -----------------------------------------------------------------PYTESTS-----------------------------------------------------------------
 
 def test_get_health() -> None:
     from Characters.dummy_character import DummyCharacter
