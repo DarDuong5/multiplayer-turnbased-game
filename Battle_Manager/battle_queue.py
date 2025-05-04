@@ -17,10 +17,17 @@ if TYPE_CHECKING:
     from Status_Effects.confusion import Confusion
     from Status_Effects.paralyze import Paralyze
 
+'''
+'BattleQueue' is a class that manages the game logic such as letting the players choose their characters and keeping track of the players and turns.
+There aren't any design patterns or OOP principles being used here but if there's something I want to improve on,
+it would be cleaning up the code and separating these methods into separate files within this package to keep everything
+organized and clean. I would only do this if I had more time but surely I will be doing this on my own time.
+'''
+
 # To represent a battle queue
 class BattleQueue:
     def __init__(self):
-        self._player_queue: list = []
+        self._player_queue: list['Character'] = []
         self._available_characters: dict[str, 'Character'] = {'1': Gladiator(), '2': Voidcaster(), '3': Stormstriker(), '4': Nightstalker(), '5': Stoneguard()}
         self._available_status_effects: dict[str, 'StatusEffect'] = {'Paralyze': Paralyze(), 'Poison': Poison(), 'Confusion': Confusion()}
 
@@ -149,7 +156,7 @@ class BattleQueue:
         time.sleep(1.0)
         for j, opponent in enumerate(self.player_queue):
             if player_index != j:
-                print(f'Player {j + 1} ({opponent}) - Health: {opponent.health} | Defense: {opponent.defense} | Status: {opponent.status_effect_type}')
+                print(f'Player {j + 1} ({opponent}) - Health: {opponent.health} | Defense: {opponent.defense}')
                 available.append(str(j + 1))
                 time.sleep(1.0)
         return available

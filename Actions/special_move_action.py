@@ -10,6 +10,15 @@ from Status_Effects.confusion import Confusion
 from Status_Effects.paralyze import Paralyze
 from Status_Effects.poison import Poison
 
+'''
+The subclass 'SpecialMoveAction' inherits from the parent class 'Action'.
+This one is similar to the subclass 'AttackAction' but this one represents a 'SpecialMoveAction'.
+The attributes 'user' is the 'Character' using that special move and 'damage' which is protected shows how much damage that special move will do to the target.
+All of these methods are special moves for specific characters. 
+The special moves titan smash is for Gladiator, arcane blast is for Voidcaster, piercing arrow is for Stormstriker, silent kill is for Nightstalker, and iron fortress is for Stoneguard.
+Some of these special moves can apply status effects in which we will get to shortly and see how they're defined and implemented.
+'''
+
 # To represent a special move action
 class SpecialMoveAction(Action):
     def __init__(self, damage: int, user: 'Character'):

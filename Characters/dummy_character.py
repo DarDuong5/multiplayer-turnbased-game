@@ -1,5 +1,9 @@
 from Characters.character import Character
 
+'''
+'DummyCharacter' serves as testing my characters on it. 
+'''
+
 # To represent a dummy character, used for Pytest
 class DummyCharacter(Character):
     def __init__(self):

@@ -4,12 +4,24 @@ from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from Characters.character import Character
 
+'''
+ABC abstraction is implemented on the parent class 'StatusEffect' where the methods 'apply' and 'update' are abstract.
+'apply' has the chance to apply the effect onto the target after being attacked by a special move.
+'update' decreases the character's health and/or skips the target's turn depending on the specific status effect.
+This is followed by polymorphism since these methods will have their own different functions. 
+Encapsulation is also being used, making the attributes protected. 
+The method that will universally be used on is 'remove_effect' which removes the effect after the status duration runs out. 
+
+If there is anything I can do to improve upon this, it would be to make the parent class 'StatusEffect' a factory class since there could be a high possibiliy
+that if there are new characters, then there could be new status effects as well. 
+'''
+
 # To represent a status effect
 class StatusEffect(ABC):
     def __init__(self, damage: int, duration: int, effect_type: str):
         self._damage = damage
         self._duration = duration
-        self.effect_type = effect_type
+        self._effect_type = effect_type
 
     # Signature: Character -> None
     # Purpose: A chance to apply status effect on the target after using a special attack move
@@ -30,11 +42,9 @@ class StatusEffect(ABC):
         to_remove = [effect for effect in target.status_effect_type if effect.effect_type == self.effect_type]
         for effect in to_remove:
             target.status_effect_type.remove(effect)
-            print(f'Removed effect: {effect} from {target}')
         
         if not target.status_effect_type:
             target.has_status_effect = False
-            print(f'{target} no longer has any status effects.')
 
     # Signature: None -> int
     # Purpose: Gets and returns the damage of the status effect
@@ -60,6 +70,18 @@ class StatusEffect(ABC):
     def duration(self, new_duration: int) -> None:
         self._duration = new_duration
 
+    # Signature: None -> str
+    # Purpose: Gets and returns the effect type applied onto the character
+    @property
+    def effect_type(self) -> str:
+        return self._effect_type
+    
+    # Signature: str -> None
+    # Purpose: Sets and updates the effect type applied onto the character
+    @effect_type.setter
+    def effect_type(self, value: str) -> None:
+        self._effect_type = value
+
     # Signature: Optional -> None
     # Purpose: Compares based on effect type and other attributes (optional)
     def __eq__(self, other: Optional['StatusEffect']) -> bool:
@@ -79,7 +101,7 @@ def guaranteed_apply(target: 'Character') -> None:
     poison = Poison()
     if poison not in target.status_effect_type:
         target.has_status_effect = True
-        target.status_effect_type.append(poison)
+        target.status_effect_type.add(poison)
         poison.duration = 4
 
 def test_remove_effect() -> None:
@@ -88,14 +110,13 @@ def test_remove_effect() -> None:
     opponent = DummyCharacter()
     poison = Poison()
     assert opponent.has_status_effect == False
-    assert opponent.status_effect_type == []
+    assert opponent.status_effect_type == set()
     guaranteed_apply(opponent)
     assert opponent.has_status_effect == True
-    assert isinstance(opponent.status_effect_type[0], Poison)
-    poison = opponent.status_effect_type[0]
+    assert any(isinstance(effect, Poison) for effect in opponent.status_effect_type)
     poison.remove_effect(opponent)
     assert opponent.has_status_effect == False
-    assert opponent.status_effect_type == []
+    assert opponent.status_effect_type == set()
 
 def test_get_damage() -> None:
     from Status_Effects.poison import Poison
@@ -121,3 +142,14 @@ def test_set_duration() -> None:
     poison.duration = 10
     assert poison.duration == 10
 
+def test_get_effect_type() -> None:
+    from Status_Effects.poison import Poison
+    poison = Poison()
+    assert poison.effect_type == 'Poison'
+
+def test_set_effect_type() -> None:
+    from Status_Effects.poison import Poison
+    poison = Poison()
+    assert poison.effect_type == 'Poison'
+    poison.effect_type = 'Poisoned'
+    assert poison.effect_type == 'Poisoned'

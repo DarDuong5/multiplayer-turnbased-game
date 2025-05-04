@@ -6,6 +6,16 @@ from Characters.stormstriker import Stormstriker
 from Characters.stoneguard import Stoneguard
 from Actions.action import Action
 
+'''
+The subclass 'AttackAction' is inherited by the parent class 'Action'.
+'AttackAction' has the attributes 'user' and 'damage'.
+'user' is the 'Character' who will attack.
+'damage' represents the amount of hit points the 'user' will deal to the target.
+'damage' is also protected which follows getter and setter methods.
+The methods are applying damage to the target hence making it an attack action.
+
+'''
+
 # To represent an attack action
 class AttackAction(Action):
     def __init__(self, damage: int, user: 'Character'):

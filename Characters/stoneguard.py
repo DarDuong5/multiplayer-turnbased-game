@@ -1,6 +1,10 @@
 from Characters.character import Character
 import time
 
+'''
+'Stoneguard' is a subclass of 'Character' where it has its own built-in attributes. A player is able to select this character and play as it.
+'''
+
 # To represent a Stoneguard character
 class Stoneguard(Character):
     def __init__(self):

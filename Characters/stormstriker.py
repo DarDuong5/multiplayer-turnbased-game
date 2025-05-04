@@ -1,5 +1,8 @@
 from Characters.character import Character
 
+'''
+'Stormstriker' is a subclass of 'Character' where it has its own built-in attributes. A player is able to select this character and play as it.
+'''
 # To represent a stormstriker character
 class Stormstriker(Character):
     def __init__(self):

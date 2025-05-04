@@ -5,6 +5,21 @@ from Characters.nightstalker import Nightstalker
 from Characters.stormstriker import Stormstriker
 from Characters.stoneguard import Stoneguard
 
+
+'''
+The design decisions on this part was to use inheritance and encapsulation. It was logical to to make the 'Action' class the parent class
+since it was more general and could be split into specific subclasses such as 'AttackAction', 'DefendAction' and 'SpecialMoveAction' which
+has similar things to the parent class 'Action' but has different logic. Encapsulation was also an important design decision I decided
+to implement for this part, making the attributes protected. 
+
+Inheritance is implemented on the parent class 'Action' and used on the subclasses 'AttackAction', 'DefendAction', and 'SpecialMoveAction'.
+'Action' has the attributes 'user' which is the 'Character' who executes the action.
+'AttackAction', 'DefendAction', and 'SpecialMoveAction' will inherit the parent class attribute 'user'.
+Encapsulation is also applied in this class by protecting the attribute 'user', having the getter and setter methods.
+
+'''
+
+
 # To represent an action
 class Action:
     def __init__(self, user: 'Character'):

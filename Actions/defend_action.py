@@ -4,6 +4,14 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from Characters.character import Character
 
+'''
+The subclass 'DefendAction' is inherited by the parent class 'Action'.
+Although there are no new attributes for 'DefendAction', it still has its own purpose.
+The attribute 'user' is the 'Character' defending
+The method allows the user to use the move defend, therefore making it a defend action.
+
+'''
+
 # To represent a defend action
 class DefendAction(Action): 
     def __init__(self, user: 'Character'):

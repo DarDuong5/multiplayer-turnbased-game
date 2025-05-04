@@ -3,6 +3,35 @@ from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from Status_Effects.status_effect import StatusEffect
+
+'''
+Since the parent class 'Character' has so many attributes that all of the characters will inherit such as health, defense, attack etc., I used inheritance
+as it would be cleaner to implement the subclasses associated as a specific character in the game. These specific characters include 'Gladiator', 
+'Nightstalker', 'Stoneguard', 'Stormstriker', and 'Voidcaster'. The methods that all of these subclasses will have are 'defend' and 'update_defense'.
+'defend allows the character to defend as defined in the 'DefendAction' subclass of 'Action. 'update_defense' basically just updates the turns if the defense is active.
+
+All of the attributed are protected with the getter and setter methods, therefore they're encapsulated. 
+'health' is the amount of health the character has.
+'defense' is the amount of defense the character has.
+'base_attack' is the amount of damage the user does.
+'special_attack' is the amount of damage the user does.
+'base_attack_name' displays the base attack name.
+'special_attack_name' displays the special attack name.
+'special_attack_cooldown' is the cooldown of the special attack before being used again.
+'defense_active' tells whether the character's defense is active or not.
+'defense_active_turns' is the number of turns that the defense is active.
+'has_status_effect' tells whether the character has any status effect or not.
+'status_effect_type' are the status effect(s) that the character has.
+'can_attack' tells whether the character can attack or not; primarily used for Paralyze.
+
+I also used ABC abstraction on the methods such as 'attack' and 'special_move' since every subclass will have these.
+The method 'attack' is defined by the subclass 'AttackAction' of the parent class 'Action'.
+The method 'special_move' is defined by the subclass 'SpecialMoveAction' of the parent class 'Action'.
+This also followed by polymorphism since these subclasses' methods will have different functions. 
+
+If there is anything that I could do to improve this design decision, it would be to implement a factory class within the parent class 'Character'
+to help create multiple other characters easily in the future but I didn't have enough time for that. However, I will be implementing that in my own time.
+'''
     
 # To represent a character
 class Character(ABC):

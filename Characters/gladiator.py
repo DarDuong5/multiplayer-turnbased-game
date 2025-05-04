@@ -1,5 +1,9 @@
 from Characters.character import Character
 
+'''
+'Gladiator' is a subclass of 'Character' where it has its own built-in attributes. A player is able to select this character and play as it.
+'''
+
 # To represent a Gladiator character
 class Gladiator(Character):
     def __init__(self):
