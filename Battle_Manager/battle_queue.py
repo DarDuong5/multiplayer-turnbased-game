@@ -4,6 +4,7 @@ from Characters.stoneguard import Stoneguard
 from Characters.voidcaster import Voidcaster
 from Characters.stormstriker import Stormstriker
 from Characters.character import Character
+from Characters.character_factory import CharacterFactory
 from Status_Effects.poison import Poison
 from Status_Effects.confusion import Confusion
 from Status_Effects.paralyze import Paralyze
@@ -28,7 +29,13 @@ organized and clean. I would only do this if I had more time but surely I will b
 class BattleQueue:
     def __init__(self):
         self._player_queue: list['Character'] = []
-        self._available_characters: dict[str, 'Character'] = {'1': Gladiator(), '2': Voidcaster(), '3': Stormstriker(), '4': Nightstalker(), '5': Stoneguard()}
+        self._available_characters: dict[str, 'Character'] = {
+            '1': CharacterFactory.create_character('1'),
+            '2': CharacterFactory.create_character('2'),
+            '3': CharacterFactory.create_character('3'),
+            '4': CharacterFactory.create_character('4'),
+            '5': CharacterFactory.create_character('5')
+        }
         self._available_status_effects: dict[str, 'StatusEffect'] = {'Paralyze': Paralyze(), 'Poison': Poison(), 'Confusion': Confusion()}
 
     # Signature: None -> list[Character]
