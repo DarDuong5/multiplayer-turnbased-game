@@ -1,0 +1,54 @@
+{
+    "Game Mechanics": {
+        "How do I attack another player?": "During your turn, you can return 1 and choose the player number to attack",
+        "What are the rules of the game?": "The game is turn-based. Each player can attack, defend, or use abilities on their turn.",
+        "Can I change my character mid-game?": "Character changes are only allowed before the game starts.",
+        "What is the maximum number of players?": "This game supports up to 3 players per match.",
+        "What happens when my health reaches zero?": "Your character is eliminated from the game.",
+        "How do cooldowns work?": "Each ability has a cooldown in turns. You must wait for it to reset before using it again.",
+        "Can I use items during battle?": "We currently do not have that but it is something to include in the future updates.",
+        "How do I defend against attacks?": "Return 2 on your turn to reduce incoming damage.",
+        "Can I revive another player?": "Currently, revival is not supported once a player is eliminated.",
+        "How do I end my turn?": "You can simply end your turn by choosing a move."
+    },
+
+    "Character Selection": {
+        "How do I choose my character?": "At the beginning of the game, you'll be prompted to select a character.",
+        "What are the differences between characters?": "Each character has unique abilities and stats like health, attack power, and status effects.",
+        "Can I preview character stats before choosing?": "Yes! Character info and stats are shown before players select their character.",
+        "Which character is best for beginners?": "The Gladiator is a great choice for new players due to balanced stats.",
+        "Is there a mage character?": "Yes, specifically the Voidcaster uses powerful spells that deals AOE with its special move.",
+        "How do I unlock new characters?": "New characters are unlocked by winning games or leveling up.",
+        "Are there any ranged characters?": "Yes, the Voidcaster and Stormstriker has long-range attacks but lower defense.",
+        "Can I rename my character?": "Character names are fixed for gameplay purposes.",
+        "Are character abilities customizable?": "No they are not. Abilities are predefined.",
+        "Do characters level up during the game?": "There are currently no level up features but could be included in the next update."
+    },
+
+    "Multiplayer Support": {
+        "How do I join a multiplayer game?": "Run the file command {chat-player#.py} to connect to a host server.",
+        "Can I host a game for friends?": "Yes, you definitely can!",
+        "Is there voice chat support?": "Voice chat is not currently supported.",
+        "Can I pause the game during multiplayer?": "Multiplayer games cannot be paused once started.",
+        "How is the turn order decided?": "Turn order is decided by player number. Player 1 goes first, then 2, and then 3, and cycles over again",
+        "What happens if a player disconnects?": "The game will keep on going but one of the current players will have to play for the other player.",
+        "Can I play cross-platform?": "Cross-platform play is not supported between PC and console.",
+        "Is matchmaking skill-based?": "No, there is such no thing as matchmaking though it could be included in the next update.",
+        "Can I chat with other players?": "Yes, the game will run with each of the players having their own chatroom. Simply message and hit send!",
+        "How do I invite friends to my game?": "You can invite them by running the game on the local host."
+    },
+
+    "Help": {
+        "How do I use this chatbot?": "You can simply type the available queries and we'll do our best to help guide you!",
+        "I found a bug in the game.": "Thank you! We are sending an agent address this issue to the higher ups.",
+        "The game crashed.": "We're sorry to hear that! Please restart the game and check your connection.",
+        "I'm stuck on the loading screen.": "Try restarting the game.",
+        "My character is not responding.": "This may be a lag issue or a game bug. Please wait or reconnect.",
+        "I'm getting a connection error.": "Check your internet connection or try joining a different server.",
+        "Can I reset my account?": "There is no such thing as resetting your account.",
+        "I lost my progress!": "This game does not save as it's played only once per game.",
+        "How can I report another player?": "We can send in an agent to handle it.",
+        "The game is too hard!": "Try using easier characters. If it's still too hard then it's a skill issue.",
+        "How do I contact game support?": "If you need to contact game support, we can send a live agent to hear your problems!"
+    }
+}

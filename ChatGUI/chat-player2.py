@@ -2,6 +2,12 @@ import socket
 import threading
 import tkinter as tk
 from tkinter import scrolledtext
+import sys
+import os
+
+# Parent directory
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from ChatbotGUI.chatbot import ChatBot
 
 class Player2:
     def __init__(self, addr='localhost', port=54505, player_name='Player 2'):
@@ -20,12 +26,13 @@ class Player2:
         # Start background threads for receiving messages
         threading.Thread(target=self.receive_message, daemon=True).start()
 
+    # Signature: None -> None
+    # Purpose: Receive messages from the server and update the chat window
     def receive_message(self) -> None:
-        """Receive messages from the server and update the chat window."""
         while True:
             try:
                 # Receive message from the server
-                message = self.tcp_socket.recv(1024).decode('utf-8')
+                message = self.tcp_socket.recv(1024).decode("utf-8")
                 if message:
                     with self.lock:
                         self.player_message.append(f"Server: {message}")
@@ -34,10 +41,12 @@ class Player2:
                 print(f"Error receiving message: {e}")
                 break
 
+    # Signature: None -> None
+    # Purpose: Send the message typed by the user to the server
     def send_message(self) -> None:
-        """Send the message typed by the user to the server."""
         message = input_field.get()
-        if message.strip():  # Ensure the message is not empty
+        # Ensure the message is not empty
+        if message.strip():
             try:
                 # Send message to the server
                 self.tcp_socket.send(f"{self.player_name}: {message}".encode("utf-8"))
@@ -54,8 +63,9 @@ class Player2:
         else:
             print("Message is empty, not sending.")
 
+    # Signature: None -> None
+    # Purpose: Updates the chat window with the latest messages
     def update_chat_window(self) -> None:
-        """Update the chat window with the latest messages."""
         chat_display.config(state=tk.NORMAL)  # Enable the chat window for updating
         chat_display.delete(1.0, tk.END)  # Clear the current chat window content
         
@@ -66,6 +76,7 @@ class Player2:
         chat_display.config(state=tk.DISABLED)  # Disable the chat window to prevent user edits
 
 player1 = Player2()
+chatbot = ChatBot()
 
 # GUI creation
 root: tk.Tk = tk.Tk()
@@ -83,6 +94,7 @@ input_field.pack(side=tk.LEFT, padx=(10, 0), pady=(0, 10))
 send_button: tk.Button = tk.Button(root, text="Send", command=player1.send_message)
 send_button.pack(side=tk.LEFT, padx=(5, 10), pady=(0, 10))
 
+chatbot.run_chatbot()
 root.mainloop()
 
     

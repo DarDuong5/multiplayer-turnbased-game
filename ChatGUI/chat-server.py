@@ -17,9 +17,11 @@ class ChatServer:
         self.clients: list = []
 
     # Handle communication - client
-    def broadcast(self, message) -> None:
+    def broadcast(self, message, conn) -> None:
         with self.lock: # Thread safe sending
             for client in self.clients:
+                if conn == client:
+                    continue
                 client.sendall(message.encode())
 
     def handle_client(self, conn, addr) -> None:
@@ -31,7 +33,7 @@ class ChatServer:
                 with self.lock:
                     self.chat_message.append(message)
                 self.update_chat_window()
-                self.broadcast(message)
+                self.broadcast(message, conn)
             except Exception as e:
                 print(f"Error handling client: {e}")
                 break
