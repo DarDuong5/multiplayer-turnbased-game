@@ -3,6 +3,23 @@ import threading
 import tkinter as tk
 from tkinter import scrolledtext
 
+# To represent a logger
+# Logger receives updates and prints them to the screen as log messages
+class Logger:
+    # Signature: str -> None
+    # Purpose: Displays the message as a log entry in the server console
+    def update(self, message: str) -> None:
+        print(f"[Logger] {message}")
+
+# To represent a notifier
+# Notifier receives updates and simulates sending a notification
+class Notifier:
+    # Signature: str -> None
+    # Purpose: Displays the message as a stimulated notification in the server console
+    def update(self, message: str) -> None:
+        print(f"[Notifier] NOTIFY: {message}")
+
+# To represent a chat server
 class ChatServer:
     def __init__(self, addr='localhost', port=54505):
         self.addr: str = addr
@@ -16,15 +33,27 @@ class ChatServer:
         self.lock: threading = threading.Lock()
         self.clients: list = []
 
-    # Handle communication - client
-    def broadcast(self, message, conn) -> None:
-        with self.lock: # Thread safe sending
+        self.observers = [Logger(), Notifier()]
+
+    # Signature: str -> None
+    # Purpose: Notifies and logs the messages into the console
+    def notify(self, message: str) -> None:
+        for observer in self.observers:
+            observer.update(message)
+
+    # Signature: str, conn -> None
+    # Purpose: Sends the message to every player in the server
+    def broadcast(self, message: str, conn) -> None:
+        with self.lock: 
             for client in self.clients:
                 if conn == client:
                     continue
                 client.sendall(message.encode())
 
+    # Signature: str, conn -> None
+    # Purpose: Handles the client to receive the message
     def handle_client(self, conn, addr) -> None:
+        self.notify(f'New connection from {addr}')
         while True:
             try:
                 message = conn.recv(1024).decode()
@@ -34,16 +63,21 @@ class ChatServer:
                     self.chat_message.append(message)
                 self.update_chat_window()
                 self.broadcast(message, conn)
+                self.notify(f'Message received: {message}')
             except Exception as e:
-                print(f"Error handling client: {e}")
+                self.notify(f'Error handling client: {e}')
                 break
-
+    
+    # Signature: None -> None
+    # Purpose: Accepts clients whenever they join
     def accept_connection(self) -> None:
         while True:
             conn, addr = self.server_socket.accept()
             self.clients.append(conn)
             threading.Thread(target=self.handle_client, args=(conn, addr), daemon=True).start()
 
+    # Signature: None -> None
+    # Purpose: Updates the chat window with the latest messages
     def update_chat_window(self) -> None:
         chat_display.config(state=tk.NORMAL) # Enabling the editing text area
         chat_display.delete("1.0", tk.END) # Clears the chat display
@@ -66,13 +100,4 @@ chat_display.pack(padx=10, pady=10)
 threading.Thread(target=chat_server.accept_connection, daemon=True).start()
 
 root.mainloop()
-
-
-
-
-
-
-
-
-
 

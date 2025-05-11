@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 # To represent a character factory class for characters
 class CharacterFactory:
     # Signature: str -> Character
-    # Purpose: 
+    # Purpose: To create and return an instance of a specific character class
     def create_character(character_type: str) -> 'Character':
         character_type = character_type.lower()
         if character_type == '1':

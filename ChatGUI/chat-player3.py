@@ -36,7 +36,7 @@ class Player3:
                 if message:
                     with self.lock:
                         self.player_message.append(f"Server: {message}")
-                        self.update_chat_window()
+                    root.after(0, self.update_chat_window)
             except Exception as e:
                 print(f"Error receiving message: {e}")
                 break
@@ -54,7 +54,7 @@ class Player3:
                 # Append the message to the client message list and update the chat window
                 with self.lock:
                     self.player_message.append(f"You: {message}")
-                    self.update_chat_window()
+                root.after(0, self.update_chat_window)
                 
                 # Clear the input field after sending the message
                 input_field.delete(0, tk.END)
@@ -94,7 +94,5 @@ input_field.pack(side=tk.LEFT, padx=(10, 0), pady=(0, 10))
 send_button: tk.Button = tk.Button(root, text="Send", command=player1.send_message)
 send_button.pack(side=tk.LEFT, padx=(5, 10), pady=(0, 10))
 
-chatbot.run_chatbot()
+#chatbot.run_chatbot()
 root.mainloop()
-
-    
